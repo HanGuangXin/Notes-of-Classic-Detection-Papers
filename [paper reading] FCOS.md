@@ -185,9 +185,7 @@ $$
 具体来说：
 
 <img src="[paper reading] FCOS.assets/image-20201106153423939.png" alt="image-20201106153423939" style="zoom: 67%;" />
-$$
 
-$$
 <img src="[paper reading] FCOS.assets/1604590952221.png" alt="1604590952221" style="zoom:67%;" />
 
 >   注意：

@@ -208,19 +208,17 @@ anchor的使用会带来一些弊端
         Overview of Corner Pooling
     </center>
 
+<img src="[paper reading] CornerNet.assets/image-20201028203544314.png" alt="image-20201028203544314"  />
 
-    <img src="[paper reading] CornerNet.assets/image-20201028203544314.png" alt="image-20201028203544314"  />
+<center>
+    Details of Corner Pooling (gary layer: 3×3 Conv-BN-ReLU)
+</center>
 
-    <center>
-        Details of Corner Pooling (gary layer: 3×3 Conv-BN-ReLU)
-    </center>
+<img src="[paper reading] CornerNet.assets/image-20201028200707123.png" alt="image-20201028200707123" style="zoom: 67%;" />
 
-
-    <img src="[paper reading] CornerNet.assets/image-20201028200707123.png" alt="image-20201028200707123" style="zoom: 67%;" />
-
-    <center>
-        Example of  Corner Pooling
-    </center>
+<center>
+    Example of  Corner Pooling
+</center>
 
 -   **Math Formulation**：
 

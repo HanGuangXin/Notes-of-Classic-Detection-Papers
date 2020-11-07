@@ -534,25 +534,25 @@ $$
         \end{array}
         \tag 2
         $$
+        
+        -   $l$：residual unit 的编号（而非layer的编号）
+        
 
+​    在 Condition(2) 的 $\mathbf{x}_{l+1}=\mathbf{y}_{l}$ 下，我们得到在 **相邻residual unit**的正向传播公式：
 
-        >   $l$：residual unit 的编号（而非layer的编号）
-    
-        在 Condition(2) 的 $\mathbf{x}_{l+1}=\mathbf{y}_{l}$ 下，我们得到在 **相邻residual unit**的正向传播公式：
-    
+$$
+\mathbf{x}_{l+1}=\mathbf{x}_{l}+\mathcal{F}\left(\mathbf{x}_{l}, \mathcal{W}_{l}\right)
+$$
+
+-   **推广到任意unit**
+
+    对于**任意 residual block**，对输入进行规定：**deeper unit 的 $\mathbf{x}_{L}$** 和 **shallower unit 的$\mathbf{x}_{l}$**
+
+    则有：
     $$
-    \mathbf{x}_{l+1}=\mathbf{x}_{l}+\mathcal{F}\left(\mathbf{x}_{l}, \mathcal{W}_{l}\right)
+    \mathbf{x}_{L}=\mathbf{x}_{l}+\sum_{i=l}^{L-1} \mathcal{F}\left(\mathbf{x}_{i}, \mathcal{W}_{i}\right)
+    \tag{3}
     $$
-    
-    -   **推广到任意unit**
-    
-        对于**任意 residual block**，对输入进行规定：**deeper unit 的 $\mathbf{x}_{L}$** 和 **shallower unit 的$\mathbf{x}_{l}$**
-    
-        则有：
-        $$
-        \mathbf{x}_{L}=\mathbf{x}_{l}+\sum_{i=l}^{L-1} \mathcal{F}\left(\mathbf{x}_{i}, \mathcal{W}_{i}\right)
-        \tag{3}
-        $$
 
 -   **backward propagation**
     $$

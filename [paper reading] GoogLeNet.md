@@ -1,5 +1,9 @@
 # [paper reading] GoogLeNet
 
+|                    Topic                    |                      Motivation                       | Technique |         Key Element          |                     Use Yourself / Math                      |
+| :-----------------------------------------: | :---------------------------------------------------: | :-------: | :--------------------------: | :----------------------------------------------------------: |
+| [GoogLeNet](./[paper reading] GoogLeNet.md) | sparse structure & dense matrix<br />problem to solve | Inception | Inception path<br />1x1 conv | Architecture<br />data augmentation<br />model ensemble<br />Test Time Augmentation<br />Inception |
+
 ## 基本概念
 
 >   这个部分其实是最重要的！
@@ -281,4 +285,4 @@ inception的不同支路在**多个尺度上**提取特征（比如1x1，3x3，5
 
     <img src="[paper reading] GoogLeNet.assets/bsadga.png" alt="bsadga" style="zoom: 67%;" />
 
-**后面的待续… …**
+**后面的待续… …*

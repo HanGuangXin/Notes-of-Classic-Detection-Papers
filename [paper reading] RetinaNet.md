@@ -118,7 +118,7 @@ fore/back的类别不平衡主要会产生2个问题：
 -   **top-down pathway**
 -   **lateral connection**
 
-![preview](https://pic2.zhimg.com/v2-38ecc58507df271897fdae605868d6e1_r.jpg)
+![preview]([paper reading] RetinaNet.assets/v2-38ecc58507df271897fdae605868d6e1_r.jpg)
 
 <center>
     上图为FPN论文的框架（RetinaNet中只有取3个stage的feature map）

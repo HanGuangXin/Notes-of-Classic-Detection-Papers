@@ -132,13 +132,13 @@ YOLO的最后一层采用线性激活函数，其它层都是Leaky ReLU。
 
 >   对于每一个单元格，前**20个元素是类别概率值class probability**，然后**2个元素是边界框置信度confidence**，两者相乘可以得到**类别置信度class-specific confidence score**，最后**8个元素是边界框boxes的** $(x,y,w,h)$
 >
->   <img src="https://pic1.zhimg.com/80/v2-6c421d06d70a1906b12ca057dfa92d0c_720w.jpg" alt="img" style="zoom:80%;" />
+>   <img src="[paper reading] YOLO v1.assets/v2-6c421d06d70a1906b12ca057dfa92d0c_720w.jpg" alt="img" style="zoom:80%;" />
 >
 >   对所有的单元格：
 >
 >   <img src="[paper reading] YOLO v1.assets/v2-3be58f956f77f0a6c8f6690312cb9063_r.jpg" alt="preview" style="zoom:80%;" />
 >
->   ![img](https://pic4.zhimg.com/80/v2-33df11dea3ad6ba31fccb709f26fc1d3_720w.jpg)
+>   ![img]([paper reading] YOLO v1.assets/v2-33df11dea3ad6ba31fccb709f26fc1d3_720w.jpg)
 
 
 
@@ -374,7 +374,7 @@ grid划分方式主要有两种：
 
 比如YOLO中的：
 
--   **classification prediction**
+-   **<img src="[paper reading] FCOS.assets/1604591595855.png" alt="1604591595855" style="zoom:50%;" />classification prediction**
 -   **bounding box prediction**
 -   **confidence**
 
@@ -432,7 +432,7 @@ grid划分方式主要有两种：
 
 从Faster-RCNN和YOLOv1来看，整个模型的Loss Function其实可以分为三个部分：
 
-1.  **bounding box regression** ==> **box offset**
+1.  **bounding box regression** ==> **box offset<img src="[paper reading] FCOS.assets/1604591595855.png" alt="1604591595855" style="zoom:50%;" />**
 2.  **confidence loss** ==> **positive/negative sample**
 3.  **classification loss** ==> **classes for positive**
 
