@@ -1,8 +1,8 @@
 # [paper reading] CenterNet (Triplets)
 
-|          topic          |                          motivation                          |                          technique                           |                         key element                          |                             math                             | use yourself |          relativity           |
-| :---------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------: | :---------------------------: |
-| CenterNet<br />(triple) | [Problem to Solve](#Problem to Solve)<br />[Idea](#Idea)<br />[Intuition](#Intuition) | [CenterNet Architecture](#CenterNet Architecture)<br />[Center Pooling](#Center Pooling)<br />[Cascade Corner Pooling](#Cascade Corner Pooling)<br />[Central Region Exploration](#Central Region Exploration) | [Baseline：CornerNet](#Baseline：CornerNet)<br />[Generating BBox](#Generating BBox)<br />[Training](#Training)<br />[Inferencing](#Inferencing)<br />[Ablation Experiment](#Ablation Experiment)<br />[Error Analysis](#Error Analysis)<br />[Metric AP & AR & FD](#Metric AP & AR & FD)<br />[Small & Medium & Large](#Small & Medium & Large) | [Central Region](#Central Region)<br />[Loss Function](#Loss Function) |      ……      | [Related Work](#Related Work) |
+|          topic          |                          motivation                          |                          technique                           |                         key element                          |                             math                             |                         use yourself                         |
+| :---------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| CenterNet<br />(triple) | [Problem to Solve](#Problem to Solve)<br />[Idea](#Idea)<br />[Intuition](#Intuition) | [CenterNet Architecture](#CenterNet Architecture)<br />[Center Pooling](#Center Pooling)<br />[Cascade Corner Pooling](#Cascade Corner Pooling)<br />[Central Region Exploration](#Central Region Exploration) | [Baseline：CornerNet](#Baseline：CornerNet)<br />[Generating BBox](#Generating BBox)<br />[Training](#Training)<br />[Inferencing](#Inferencing)<br />[Ablation Experiment](#Ablation Experiment)<br />[Error Analysis](#Error Analysis)<br />[Metric AP & AR & FD](#Metric AP & AR & FD)<br />[Small & Medium & Large](#Small & Medium & Large) | [Central Region](#Central Region)<br />[Loss Function](#Loss Function) | [To Solved Problem](#To Solved Problem)<br />[Better Representation](#Better Representation)<br />[Generator & Adaptive](#Generator & Adaptive) |
 
 ## Motivation
 
@@ -61,16 +61,18 @@
 
     原因：**Center Information**。**incorrect bounding box越小**，能在其**Central Region检测到center keypoint的可能性越小**
 
-    <img src="[paper reading] CenterNet (Triplets).assets/image-20201105135615588.png" alt="image-20201105135615588" style="zoom: 80%;" />
+    **滤除**了**incorrect bounding box**，相当于**提升**了**accurate location but lower scores**的**bounding box**的**confidence**
 
+    <img src="[paper reading] CenterNet (Triplets).assets/image-20201105135615588.png" alt="image-20201105135615588" style="zoom: 80%;" />
+    
     <center>
-        small object
+    small object
     </center>
-<img src="[paper reading] CenterNet (Triplets).assets/image-20201105135713341.png" alt="image-20201105135713341" style="zoom:80%;" />
+    <img src="[paper reading] CenterNet (Triplets).assets/image-20201105135713341.png" alt="image-20201105135713341" style="zoom:80%;" />
     
 <center>
         medium & large object
-    
+
 -   **AR Improvement**
 
     原因：**滤除**了**incorrect bounding box**，相当于**提升**了**accurate location but lower scores**的**bounding box**的**confidence**
@@ -96,7 +98,11 @@
 对于Center Pooling的输入feature map，在**水平和垂直方向**取**max summed response**
 
 1.  backbone输出feature map
+
+    这里一定要为**2个不同的feature map**，即**horizontal和vertical的Corner Pooling**接收的**feature map必须是不同的**，否则相当于Center Pooling不起作用
+
 2.  在水平和垂直方向分别找到最大值
+
 3.  将其加到一起
 
 ![image-20201105123057169]([paper reading] CenterNet (Triplets).assets/image-20201105123057169.png)
@@ -127,7 +133,15 @@
 
 ![image-20201105123054029]([paper reading] CenterNet (Triplets).assets/image-20201105123054029.png)
 
+#### Attention！
 
+**Cascade Corner Pooling**在具体实现上**并不是严格按照上述流程**，而是**额外采用了skip connection和1×1 Conv**这些被证明有效的技术，使得**Cascade Corner Pooling**具有了**一定的自适应能力**
+
+因为从Cascade Corner Pooling的原理来看，**垂直非对齐的位置也可能比对齐位置的信息更有用**
+
+总的来说，**Left Pooling和Top Pooling**其实给出了**Cascade Top Corner Pooling**的**基准**（e.g. 先在boundary方向找最大值，再在boundary max的位置在internal方向找最大值），而**skip connection和Top Pooling之前的 1×1 Conv**其实是**在该基准上**，使得**Cascade Top Corner Pooling有了一些自适应性**
+
+**因为我们知道这种方式是有效的，但不知道其如何才能最有效！！！**这就交给**网络自己去学习**吧！
 
 ### Central Region Exploration
 
@@ -366,7 +380,29 @@ $$
 
 ## Use Yourself
 
-……
+### To Solved Problem
+
+**CenterNet (Triplet)** 中将**visual patterns within object**转化为**keypoint detection**的问题
+
+相比于获取**visual patterns within object**，**keypoint detection**是一个更容易解决的问题
+
+这种将**待解决问题转化为已解决问题**的思路值得学习
+
+### Better Representation
+
+面对相同的数据，使用相同的框架，对于数据representation的好坏，会直接影响模型的性能
+
+如何产生**更好的representation**，是一个重要的问题。包括**Faster-RCNN，SSD，RetinaNet（FPN）代表的anchor-based method**（e.g. 从single-scale到multi-scale），以及**CornerNet，CenterNet (Triplet) 的Cascade Corner Pooling代表的keypoint-based method**，都是在这方向上的尝试
+
+但是如何评价一个Representation的好坏呢？这似乎又回到了**可解释性**的问题，或者是我们直观的理解？
+
+### Generator & Adaptive
+
+个人认为，**神经网络具有一定的自适应性**的原因是**神经网络可以作为生成器**
+
+对于一些**难以具体实现的方法**，或者**有基准但是最优方法难以确定**的情况，可以借由**神经网络生成器的作用**来实现
+
+这种思路最早出现于**ResNet的shortcut connection**
 
 ## Related Work
 
@@ -490,7 +526,16 @@ Anchor-Based Method有2个关键点：
 
 ## Problems
 
--   [ ] Cascade Corner Pooling的internal方向，怎么找boundary方向的最大值呢？
+-   [x] Cascade Corner Pooling的internal方向，怎么找boundary方向的最大值呢？
+
+    网络的自适应性，详见 [Cascade Corner Pooling](#Cascade Corner Pooling)
+
 -   [x] AP和AR的含义到底是什么？
--   [ ] 为什么CornerNet去referring目标的global information的能力很弱？
+
+-   [x] 为什么CornerNet去referring目标的global information的能力很弱？
+
+    因为Corner Pooling仅仅负责 $\frac14$ 的空间
+
+    -   top-left corner pooling 负责第四象限
+    -   bottom-right corner pooling 负责第二象限
 

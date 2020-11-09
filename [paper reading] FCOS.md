@@ -1,8 +1,8 @@
 # [paper reading] FCOS
 
-|               topic               |                    motivation                    |                          technique                           |                         key element                          |                             math                             | use yourself |          relativity           |
-| :-------------------------------: | :----------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------: | :---------------------------: |
-| [FCOS](./[paper reading] FCOS.md) | [Idea](#Idea)<br />[Contribution](#Contribution) | [FCOS Architecture](#FCOS Architecture)<br />[Center-ness](#Center-ness)<br />[Multi-Level FPN Prediction](#Multi-Level FPN Prediction) | [Prediction Head](#Prediction Head)<br />[Training Sample & Label](#Training Sample & Label)<br />[Model Output](#Model Output)<br />[Feature Pyramid](#Feature Pyramid)<br />[Inference](#Inference)<br />[Ablation Study](#Ablation Study)<br />[FCN & Detection](#FCN & Detection)<br />[FCOS $vs.$ YOLO v1](#FCOS $vs.$ YOLO v1) | [Symbol Definition](#Symbol Definition)<br />[Loss Function](#Loss Function)<br />[Center-ness](#Center-ness)<br />[Remap of Feature & Image](#Remap of Feature & Image) |      ……      | [Related Work](#Related Work) |
+|               topic               |                    motivation                    |                          technique                           |                         key element                          |                             math                             |                         use yourself                         |
+| :-------------------------------: | :----------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| [FCOS](./[paper reading] FCOS.md) | [Idea](#Idea)<br />[Contribution](#Contribution) | [FCOS Architecture](#FCOS Architecture)<br />[Center-ness](#Center-ness)<br />[Multi-Level FPN Prediction](#Multi-Level FPN Prediction) | [Prediction Head](#Prediction Head)<br />[Training Sample & Label](#Training Sample & Label)<br />[Model Output](#Model Output)<br />[Feature Pyramid](#Feature Pyramid)<br />[Inference](#Inference)<br />[Ablation Study](#Ablation Study)<br />[FCN & Detection](#FCN & Detection)<br />[FCOS $vs.$ YOLO v1](#FCOS $vs.$ YOLO v1) | [Symbol Definition](#Symbol Definition)<br />[Loss Function](#Loss Function)<br />[Center-ness](#Center-ness)<br />[Remap of Feature & Image](#Remap of Feature & Image) | [Physical & Prior Knowledge](#Physical & Prior Knowledge)<br />[Design or Adaptive](#Design or Adaptive)<br />[Sample & Filter Strategy](#Sample & Filter Strategy)<br />[Generalized Keypoint-based](#Generalized Keypoint-based) |
 
 ## Motivation
 
@@ -162,7 +162,7 @@ $$
 **location** $(x,y)$ 为**正样本**的条件为：
 
 1.  **location** $(x,y)$ 落在 **ground-truth box中**
-2.  **location** $(x,y)$  **的类别** == 该**ground-truth box****的类别**
+2.  **location** $(x,y)$  **的类别** == 该**ground-truth box**的类别
 
 **FCOS**使用了**尽可能多的foreground sample**来**训练**（e.g. **ground-truth box的全部location**）
 
@@ -325,6 +325,59 @@ $$
 
 
 ## Use Yourself
+
+### Physical & Prior Knowledge
+
+-   从**物理意义**的角度：
+
+    **center-ness**可以**encode关于center的物理意义**，从而**筛选出center-like的位置**，即：**没有被down-weight的location都近似具有center的物理意义**
+
+-   从**先验知识**的角度：
+
+    **center-ness**其实**encode了关于bounding box的先验知识**，即**边界的location难以产生高质量的bounding box**
+
+启示：如果能找到合理的方式去**将先验知识嵌入到模型中**，使之**具备一定的物理意义**，应该可以在**性能上获得一些提升**
+
+### Design or Adaptive
+
+关于**multi-size的object**如何在**multi-scale的feature level**上进行detection：
+
+在之前的网络中（e.g. **RetinaNet的FPN**）都是**不指定何种size由哪层去detect**，属于**自适应**的方法
+
+而**FCOS**的**Multi-level FPN Prediction**把**特定size的object分配到特定的feature level**，属于**手工设计**的方法
+
+具体采用**Design还是Adaptive**，取决于面对的问题。就目前来看，我的看法：
+
+-   **自适应方法**：
+
+    需要当前方法有效，其自适应调整较轻微（还是按照这个架子），且有几乎稳定的正收益
+
+-   **手工设计**：
+
+    当前方法的分配关系比较混乱（一对多的对应关系），specialized程度低，可通过手工设计转化为1对1的对应关系
+
+### Sample & Filter Strategy
+
+总的来说，**sample**和**filter**是一对**trade-off**
+
+一般来说，sample的点越多越好，但其空间和时间的占用都会增加，对post-processing的需求也增加
+
+最好还是**尽可能多地利用候选样本点，再通过尽可能简单的方式过滤掉冗余的样本**（e.g. FCOS的classification score * center-ness）
+
+### Generalized Keypoint-based
+
+**FCOS = CenterNet (object as points) + Center-ness**
+
+**CenterNet (object as points)** 相当于**只选用bounding box的geometric center（几何中心）**进行bounding box的预测（e.g. bounding box的 $W,H$），所以其检测到的center到各边的距离为 $(\frac{W}{2}, \frac{H}{2})$
+
+而**FCOS**使用了**ground-truth bounding box内的所有location**进行预测（e.g. $r^*,l^*,t^*,b^*$），但使用**center-ness**对**远离center的location**进行了**高效率的抑制**
+
+**FCOS**其实也是**generalized keypoint-based的思路**，只不过像**传统的keypoint**（e.g. **CornerNet**，**CenterNet**），其**keypoint具有实际的物理意义**（e.g. **center**，**corner**），而**FCOS的keypoint为ground-truth bounding box的全部location**，而通过**center-ness来赋予其物理意义**
+
+简而言之，**FCOS**最终用于**产生predicted bounding box的location**是**center-like**的，即：
+
+-   在**空间位置上**：并**不一定是geometric center**
+-   但是具有**类似center的物理意义和先验知识**
 
 ## Related Work
 

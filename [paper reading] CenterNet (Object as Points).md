@@ -1,8 +1,8 @@
 # [paper reading] CenterNet (Object as Points)
 
-|               topic               |                        motivation                        |                     technique                     |                         key element                          |                             math                             | use yourself |                          relativity                          |
-| :-------------------------------: | :------------------------------------------------------: | :-----------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------: | :----------------------------------------------------------: |
-| CenterNet<br />(Object as Points) | [Problem to Solve](#Problem to Solve)<br />[Idea](#Idea) | [CenterNet Architecture](#CenterNet Architecture) | [Center Point & Anchor](#Center Point & Anchor)<br />[Getting Ground-Truth](#Getting Ground-Truth)<br />[Model Output](#Model Output)<br />[Data Augmentation](#Data Augmentation)<br />[Inference](#Inference)<br />[TTA](#TTA)<br />[Compared with SOTA](#Compared with SOTA)<br />[Additional Experiments](#Additional Experiments) | [Loss Function](#Loss Function)<br />[KeyPoint Loss $\text{L}_k$](#KeyPoint Loss $\text{L}_k$)<br />[Offset Loss $\text{L}_{off}$](#Offset Loss $\text{L}_{off}$)<br />[Size Loss $\text{L}_{size}$](#Size Loss $\text{L}_{size}$) |      ……      | [Anchor-Based](#Anchor-Based Method)<br />[KeyPoint-Based](#KeyPoint-Based Method) |
+|               topic               |                        motivation                        |                     technique                     |                         key element                          |                             math                             |                 use yourself                  |
+| :-------------------------------: | :------------------------------------------------------: | :-----------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-------------------------------------------: |
+| CenterNet<br />(Object as Points) | [Problem to Solve](#Problem to Solve)<br />[Idea](#Idea) | [CenterNet Architecture](#CenterNet Architecture) | [Center Point & Anchor](#Center Point & Anchor)<br />[Getting Ground-Truth](#Getting Ground-Truth)<br />[Model Output](#Model Output)<br />[Data Augmentation](#Data Augmentation)<br />[Inference](#Inference)<br />[TTA](#TTA)<br />[Compared with SOTA](#Compared with SOTA)<br />[Additional Experiments](#Additional Experiments) | [Loss Function](#Loss Function)<br />[KeyPoint Loss $\text{L}_k$](#KeyPoint Loss $\text{L}_k$)<br />[Offset Loss $\text{L}_{off}$](#Offset Loss $\text{L}_{off}$)<br />[Size Loss $\text{L}_{size}$](#Size Loss $\text{L}_{size}$) | [Getting Ground-Truth](#Getting Ground-Truth) |
 
 ## Motivation
 
@@ -20,7 +20,7 @@
 
 - 从**本质**上讲：
 
-  将Object Detection转化为Standard Keypoint Estimation
+  将**Object Detection**转化为**Standard Keypoint Estimation**
 
 - 从**思路**上讲：
 
@@ -73,6 +73,8 @@
 
 **center point**可以看作是**shape-agnostic anchor**（**形状不可知**的anchor）
 
+即：相当于是在**image的每个location**对应**1个shape-agnostic ancho**r（e.g. **center keypoint**）
+
 #### Difference
 
 - **center point**仅仅与**location**有关（**与box overlap无关**）
@@ -121,7 +123,9 @@ $$
 -   $\hat Y _{x,y,c} =1$ ==> **keypoint**
 -   $\hat Y _{x,y,c} =0$ ==> **background**
 
->   注意：这里的**center**是**bounding box**的**几何中心**，即**center**到**左右边和上下边**的**距离是相等的**
+>   **注意**：这里的**center**是**bounding box**的**几何中心**，即**center**到**左右边和上下边**的**距离是相等的**
+>
+>   这样**需要回归的量**就从**4个distance**变成了**2个**
 
 #### Size Ground-Truth
 
@@ -135,7 +139,7 @@ p_k = \big(  \frac{x_1^{(k)} +  x_2^{(k)}  }{2}   , \frac{y_1^{(k)} +  y_2^{(k)}
 $$
 **Size Ground-Truth** 表示为：
 $$
-s_k = \big(x_2^{(k)} - x_1^{(k)}, y_2^{(k)}-y_1^{(k)} \big)
+s_k = \big(x_2^{(k)} - x_1^{(k)}, y_2^{(k)}-y_1^{(k)} \big) = (W,H)
 $$
 
 >   注意：**不对scale进行归一化**，而是**直接使用raw pixel coordinate**
@@ -277,7 +281,7 @@ $$
 
 **penalty-reduced** pixel-wise **logistic regression** with **focal loss**
 
-<img src="[paper reading] CenterNet (Object as Points).assets/image-20201105190626950.png" alt="image-20201105190626950" style="zoom:80%;" />
+<img src="[paper reading] CenterNet (Object as Points).assets/3A35DCC9DDB35ACDE954365EE4354074.png" alt="3A35DCC9DDB35ACDE954365EE4354074" style="zoom: 33%;" />
 
 -   $\hat{Y}_{xyc}$ ：**predicted keypoint confidence**
 -   $\alpha =2,\beta=4$
@@ -304,7 +308,18 @@ $$
 
 ## Use Yourself
 
-……
+### Getting Ground-Truth
+
+**以何种方式表示ground-truth，决定了所采用的方法**
+
+从本质来说，使用**corner coordinate表示ground-truth**，都是在**某个“基准”上**，**直接**对**ground-truth**进行**regression**
+
+-   **anchor-based**是sliding window的思想，先**通过anchor获得bounding box**（避免了对于bbox的detection），再对**4个corner的坐标进行regression**
+-   **keypoint-based** 的**CornerNet**（包括使用center来矫正的CenterNet (Triplet) ）需要**先检测corner**，再对其**坐标进行regression**
+
+若使用**center+distance**表示**ground-truth**（e.g. CenterNet (object as points)），本质上则是**检测center**，并在**center上对2个distance进行regression**，之后进行**decode得到bounding box**
+
+这给我一个启发：对于**复杂的ground-truth**，应用一些方法将其转化为**具有一些实际物理意义的低维数据**，最后通过**数学或其他关系**反向decode**还原原始的ground-truth**，是不是会更好呢？
 
 ## Related work
 
