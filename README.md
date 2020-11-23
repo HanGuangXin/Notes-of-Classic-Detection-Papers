@@ -1,4 +1,4 @@
-**11**篇论文的笔记，总字数 3062 + 6153 + 1927 + 3092 + 5481 + 4203 + 2868 + 5381 + 2884 + 1975 + 2899 = **39925**
+**11**篇论文的笔记，总字数 3062 + 6153 + 1927 + 3092 + 5481 + 4203 + 2868 + 5381 + 2884 + 1975 + 2899 +3871 = **43796**
 
 我个人认为，**需要到能给其他人讲论文的程度，这里的Notes可以满足您80~90%的需求**
 
@@ -110,6 +110,7 @@
 | [CenterNet<br />(triplets)](https://blog.csdn.net/qq_41683065/article/details/109548342) |   Problem to Solve<br />Idea<br />Intuition   | CenterNet Architecture<br />Center Pooling<br />Cascade Corner Pooling<br />Central Region Exploration | Baseline：CornerNet<br />Generating BBox<br />Training<br />Inferencing<br />Ablation Experiment<br />Error Analysis<br />Metric AP & AR & FD<br />Small & Medium & Large |              Central Region<br />Loss Function               |
 | [CenterNet<br />(Object as Points)](https://blog.csdn.net/qq_41683065/article/details/109548508) |          Problem to Solve<br />Idea           |                    CenterNet Architecture                    | Center Point & Anchor<br />Getting Ground-Truth<br />Model Output<br />Data Augmentation<br />Inference<br />TTA<br />Compared with SOTA<br />Additional Experiments | Loss Function<br />KeyPoint Loss $\text{L}_k$<br />Offset Loss $\text{L}_{off}$<br />Size Loss $\text{L}_{size}$ |
 |              [FCOS](./[paper reading] FCOS.md)               |            Idea<br />Contribution             | FCOS Architecture<br />Center-ness<br />Multi-Level FPN Prediction | Prediction Head<br />Training Sample & Label<br />Model Output<br />Feature Pyramid<br />Inference<br />Ablation Study<br />FCN & Detection<br />FCOS $vs.$ YOLO v1 | Symbol Definition<br />Loss Function<br />Center-ness<br />Remap of Feature & Image |
+|     [Cascade R-CNN](./[paper reading] Cascade R-CNN.md)      |       Problem to Solve<br />Motivation        |                 Architecture<br />Advantages                 | Degradation of High IoU<br />Quality Match<br />Cascade Regression<br />Cascade Detection<br />Iterative BB Regression<br />Integral Loss<br />Training Strategy<br />Inference Strategy<br />implement Details<br />Generalization Capacity<br />Ablation Experiments<br />Comparison with SOTA | Loss Function of Stages<br />Standard BBox Regression<br />Iterative BB Regression<br />Classification |
 
 ### Details
 
@@ -442,3 +443,32 @@
   - Anchor-Based Detector
   - YOLO v1
   - CornerNet
+
+#### [Cascade R-CNN](#./[paper reading] Cascade R-CNN.md)
+
+- Motivations
+    - Problem to Solve
+    - Motivation
+- Techniques
+    - Architecture
+    - Advantages
+- Key Elements
+    - Degradation of High IoU
+    - Quality Match
+    - Cascade Regression
+    - Cascade Detection
+    - Iterative BB Regression
+    - Integral Loss
+    - Training Strategy
+    - Inference Strategy
+    - implement Details
+    - Generalization Capacity
+    - Ablation Experiments
+    - Comparison with SOTA
+- Math
+    - Loss Function of Stages
+    - Standard BBox Regression
+    - Iterative BB Regression
+    - Classification
+- Use Yourself
+- Related Work

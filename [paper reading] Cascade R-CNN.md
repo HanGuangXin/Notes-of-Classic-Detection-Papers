@@ -4,7 +4,7 @@
 | :----------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :---------------------------------------------: |
 | [Cascade R-CNN](./[paper reading] FCOS.md) | [Problem to Solve](#Problem to Solve)<br />[Motivation](#Motivation) | [Architecture](#Architecture)<br />[Advantages](#Advantages) | [Degradation of High IoU](#Degradation of High IoU)<br />[Quality Match](#Quality Match)<br />[Cascade Regression](#Cascade Regression)<br />[Cascade Detection](#Cascade Detection)<br />[Iterative BB Regression](#Iterative BB Regression)<br />[Integral Loss](#Integral Loss)<br />[Training Strategy](#Training Strategy)<br />[Inference Strategy](#Inference Strategy)<br />[implement Details](#implement Details)<br />[Generalization Capacity](#Generalization Capacity)<br />[Ablation Experiments](#Ablation Experiments)<br />[Comparison with SOTA](#Comparison with SOTA) | [Loss Function of Stages](#Loss Function of Stages)<br />[Standard BBox Regression](#Standard BBox Regression)<br />[Iterative BB Regression](#Iterative BB Regression)<br />[Classification](#Classification) | [Thought & Inspiration](#Thought & Inspiration) |
 
-## Motivation
+## Motivations
 
 >   有2个概念容易混淆：
 >
